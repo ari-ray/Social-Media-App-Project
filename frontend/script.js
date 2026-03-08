@@ -1,91 +1,121 @@
 const API_URL = "http://127.0.0.1:8000";
+const token = localStorage.getItem("token");
 
-// async = handles asynchronous operations
-async function fetchPosts(){ //res is the whole HHTp response object we get from the server and data contains the posts array
-    const res = await fetch(`${API_URL}/posts`); //fetch sends a GET request to /posts endpoint
-    const data = await res.json(); //res.json(): parses the response as JSON & data hold the posts array from backend
-
-    //clearing old posts
-    const postsDiv = document.getElementById("posts");
-    postsDiv.innerHTML = ""; //clears the div first so that posts dont get duplicated
-
-    //display
-    data.forEach(post => { //loop
-        const div = document.createElement("div"); //creates new div element in memory which holds one post
-        div.innerHTML = `
-            <p>${post.content}</p>
-            <small>${new Date(post.created_at).toLocaleString()}</small>
-            <button onclick="likePost(${post.id})">
-                ❤️${post.likes}
-            </button>
-
-            <button onclick="editPost(${post.id})">
-        ✏️      Edit
-            </button>
-
-            <button onclick="deletePost(${post.id})">
-                🗑 Delete
-            </button>
-            <hr>
-        `;
-        postsDiv.appendChild(div);
-    });
+if (!token) {
+    window.location.href = "login.html";
 }
 
-//create post
-async function createPost(){
-    const content = document.getElementById("content").value; //finds <input> with id="content" reads whatever is typed there and then stores it in the variable 'content'
+// async = handles asynchronous operations
+async function fetchPosts() {//res is the whole HTTP response object we get from the server and data contains the posts array
+    try {
+        const res = await fetch(`${API_URL}/api/posts`); //fetch sends a GET request to /posts endpoint
+        const posts = await res.json(); //res.json(): parses the response as JSON & data hold the posts array from backend
 
-    if (!content.trim()) {
+
+         if (!Array.isArray(posts)) {
+            console.error("Expected array, got:", posts);
+            return;
+        }
+
+        const postsDiv = document.getElementById("posts");
+        postsDiv.innerHTML = "";
+
+        posts.forEach(post => {
+            const div = document.createElement("div");
+            div.innerHTML = `
+                <h3>${post.title}</h3>
+                <p>${post.content}</p>
+                <small>${new Date(post.created_at).toLocaleString()}</small>
+                <br>
+                <button onclick="likePost(${post.id})">❤️ ${post.likes_count}</button>
+                <button onclick="editPost(${post.id})">✏️ Edit</button>
+                <button onclick="deletePost(${post.id})">🗑 Delete</button>
+                <hr>
+            `;
+            postsDiv.appendChild(div);
+        });
+    } catch (e) {
+        alert("Error loading posts: " + e.message);
+    }
+}
+
+async function createPost() {
+    const content = document.getElementById("content").value.trim();
+    if (!content) {
         alert("Post cannot be empty");
         return;
     }
 
-    await fetch(`${API_URL}/posts`,{
-        method: "POST", //sends a POST request to /posts endpoint
-        headers: {
-            "Content-Type" : "application/json" //backend knows it's JSON
-        },
-        body: JSON.stringify({ content }) //sends the typed text in JSON format
-    });
-
-    document.getElementById("content").value =""; //clears the input
-    fetchPosts()
+    try {
+        await fetch(`${API_URL}/api/posts`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "token": token
+            },
+            body: JSON.stringify({
+                title: "My Post",
+                content: content
+            })
+        });
+        document.getElementById("content").value = "";
+        fetchPosts();
+    } catch (e) {
+        alert("Error creating post: " + e.message);
+    }
 }
 
-//likes
-async function likePost(id){
-    await fetch(`${API_URL}/posts/${id}/like`, {
-       method: "POST" //sends a post request and updates on backend
-    });
-    fetchPosts(); //refreshes posts with updated likes
+async function likePost(id) {
+    try {
+        await fetch(`${API_URL}/api/posts/${id}/like`, {
+            method: "POST",
+            headers: { "token": token }
+        });
+        fetchPosts();
+    } catch (e) {
+        alert("Error liking post");
+    }
 }
 
-async function deletePost(id){
-    await fetch(`${API_URL}/posts/${id}`, {
-        method: "DELETE"
-    });
-
-    fetchPosts();
+async function deletePost(id) {
+    if (!confirm("Delete this post?")) return;
+    try {
+        await fetch(`${API_URL}/api/posts/${id}`, {
+            method: "DELETE",
+            headers: { "token": token }
+        });
+        fetchPosts();
+    } catch (e) {
+        alert("Error deleting post");
+    }
 }
 
-async function editPost(id){
-    const currentText = document.getElementById(`content-${id}`).innerText;
+async function editPost(id) {
+    const newContent = prompt("Edit post content:");
+    if (!newContent?.trim()) return;
 
-    const newContent = prompt("Edit your post:", currentText);
-
-    if (!newContent || !newContent.trim()) return;
-
-    await fetch(`${API_URL}/posts/${id}`, {
-        method: "PUT",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ content: newContent })
-    });
-
-    fetchPosts();
+    try {
+        await fetch(`${API_URL}/api/posts/${id}`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+                "token": token
+            },
+            body: JSON.stringify({
+                title: "Updated Post",
+                content: newContent
+            })
+        });
+        fetchPosts();
+    } catch (e) {
+        alert("Error editing post");
+    }
 }
 
+function logout() {
+    localStorage.removeItem("token");
+    window.location.href = "login.html";
+}
+
+// Load posts on page load
 fetchPosts();
-
