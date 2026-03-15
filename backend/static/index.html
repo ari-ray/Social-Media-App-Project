@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Social Media App</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+    <body>
+        <div class = "container">
+            <h1> Feed </h1>
+
+            <div class = "create-post">
+                <input type="text" id="content" placeholder="What's on your mind?" />
+                <button onclick="createPost()">Post</button>
+                <button onclick="logout()"> Logout </button>
+            </div>
+
+            <div id="posts" class="posts"></div>
+        </div>
+        <script src="script.js"></script>
+    </body>
+</html>

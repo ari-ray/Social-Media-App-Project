@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login/Register</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Login/Register</h1>
+        <div class="auth-form">
+            <input type="text" id="username" placeholder="Username"/>
+            <input type="text" id="email" placeholder="Email (for registration)"/>
+            <button onclick="registerUser()">Register</button>
+            <button onclick="loginUser()">Login</button>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = "http://127.0.0.1:8000";
+
+        async function registerUser(){
+            const username = document.getElementById("username").value.trim();
+            const email = document.getElementById("email").value.trim();
+
+            if (!username || !email){
+                alert("Username and email required for registration");
+                return;
+            }
+
+            try {
+                const res = await fetch(`${API_URL}/users/register`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ username, email })
+                });
+                const data = await res.json();
+
+                if (res.ok) {
+                    alert("Registration successful! Now log in with your username.");
+                } else {
+                    alert(data.detail || "Registration failed");
+                }
+            }
+            catch (err) {
+                alert("Network error during registration");
+            }
+        }
+
+        async function loginUser(){
+            const username = document.getElementById("username").value.trim();
+
+            if (!username){
+                alert("Username required for login");
+                return;
+            }
+
+            try {
+                const res = await fetch(`${API_URL}/users/login`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ username })
+                });
+                const data = await res.json();
+
+                if (res.ok) {
+                    localStorage.setItem("token", data.token);
+                    window.location.href = "index.html";
+                } else {
+                    alert(data.detail || "Login failed");
+                }
+            }
+            catch (err) {
+                alert("Network error during login");
+            }
+        }
+    </script>
+
+</body>
+</html>
