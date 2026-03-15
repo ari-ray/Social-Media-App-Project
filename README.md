@@ -51,7 +51,7 @@ venv\Scripts\activate     # Windows
 pip install -r requirements.txt
 ```
 
-## Running the Project
+## Running the Project (Locally)
 - Start the backend server:
 ```bash
 uvicorn backend.main:app --reload
@@ -117,6 +117,11 @@ Key learning outcomes from this project include:
 The project also shows how backend systems handle real-world features such as post creation, liking content, searching data and enforcing user permissions for editing or deleting resources.
 
 Overall this project serves as a practical example of how modern web applications manage users, data and authentication while maintaining clean and modular code.
+
+## Limitations
+- Frontend does not yet support "search by post title/content"
+- Posts are not currently assciated with specific users
+- System does not display which user is currently logged in
 
 ## IMPORTANT NOTE FOR DEPLOYMENT
 While deploying the web-app on Render some challenges were faced. To overcome those challenges, some API_URL changes had to be done to the code. ALongside that, in order to get the frontend functional, all the frontend files are now put in the "static" folder of the "backend" directory. I have still left the "frontend" directory in here so that it is easier to distinguish the files. 
