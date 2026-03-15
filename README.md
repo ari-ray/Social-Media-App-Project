@@ -1,6 +1,6 @@
-# Social Media App
+# Social Media App : https://smap-kfmy.onrender.com
 
-A simple social media API built with FastAPI, SQLAlchemyand Pydantic. Supports user registration, login with token-based authentication, posting, liking, editing, deleting posts and searching posts.
+A simple social media API built with FastAPI, SQLAlchemyand Pydantic. Supports user registration, login with token-based authentication, posting, liking, editing, deleting posts and searching posts. The Web-app has been deployed on Render.
 
 ## Features
 - User Authentication
@@ -117,6 +117,9 @@ Key learning outcomes from this project include:
 The project also shows how backend systems handle real-world features such as post creation, liking content, searching data and enforcing user permissions for editing or deleting resources.
 
 Overall this project serves as a practical example of how modern web applications manage users, data and authentication while maintaining clean and modular code.
+
+## IMPORTANT NOTE FOR DEPLOYMENT
+While deploying the web-app on Render some challenges were faced. To overcome those challenges, some API_URL changes had to be done to the code. ALongside that, in order to get the frontend functional, all the frontend files are now put in the "static" folder of the "backend" directory. I have still left the "frontend" directory in here so that it is easier to distinguish the files. 
 
 ## Author
 Arittri Ray
