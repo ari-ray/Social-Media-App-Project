@@ -10,7 +10,7 @@ A simple social media API built with FastAPI, SQLAlchemyand Pydantic. Supports u
 - Posts Management
   - Create, read, update and delete posts
   - Like posts
-  - Search posts by title or content
+  - Date and time stamps (UTC) on posts
 - User Statistics
   - Get post count per user
  
@@ -120,6 +120,7 @@ Overall this project serves as a practical example of how modern web application
 
 ## IMPORTANT NOTE FOR DEPLOYMENT
 While deploying the web-app on Render some challenges were faced. To overcome those challenges, some API_URL changes had to be done to the code. ALongside that, in order to get the frontend functional, all the frontend files are now put in the "static" folder of the "backend" directory. I have still left the "frontend" directory in here so that it is easier to distinguish the files. 
+Oregon was selected as the region for deployment. 
 
 ## Author
 Arittri Ray
