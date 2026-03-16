@@ -1,4 +1,4 @@
-# Social Media App : https://smap-kfmy.onrender.com
+# Social Media App (SMAP) : https://smap-kfmy.onrender.com
 
 A simple social media API built with FastAPI, SQLAlchemyand Pydantic. Supports user registration, login with token-based authentication, posting, liking, editing, deleting posts and searching posts. The Web-app has been deployed on Render.
 
